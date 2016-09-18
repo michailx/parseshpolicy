@@ -11,7 +11,6 @@ fr.close()
 input_string = input_string.replace('\r', '')  # Remove /r at the end of each line
 lines = input_string.split('\n')
 
-
 sample_class_maps = []
 sample_bps = []
 sample = {}
