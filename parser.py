@@ -11,6 +11,13 @@ fr.close()
 input_string = input_string.replace('\r', '')  # Remove /r at the end of each line
 lines = input_string.split('\n')
 
+
+sample_class_maps = []
+sample_bps = []
+sample = {}
+
+i = 0
+
 # Note to self --> print(repr(string)) prints the raw string including all special chars like \n
 for line in lines:
     line = line.strip()  # Remove beginning and trailing white spaces on each line
@@ -19,15 +26,34 @@ for line in lines:
         continue
     elif re.match('^..:..:..\.', line) is not None:
         # Timestamp
-        line = line[:8]
+        # Next sample
+        i += 1
+
+        # Save previous sample
+        for n in range(0, len(sample_class_maps)):
+            sample[sample_class_maps[n]] = sample_bps[n]
+        print (sample)
+
+        # New sample
+        sample_class_maps = []
+        sample_bps = []
+        sample = {}
+
+        sample['timestamp'] = line[:8]
+        line = line[:8]  # DELETE THIS
     elif re.match('^30 second offered rate [0123456789]* bps', line) is not None:
         # Rate
         line = line[23:]
         line = line.split(' ')[0]  # Need to improve this
+        sample_bps.append(line)
+    elif line[:11] == 'Class-map: ':
+        line = line[11:]
+        line = line.split(' ')[0]  # Need to improve this
+        sample_class_maps.append(line)
     else:
         # Disregard
         continue
-    print(repr(line))
+    #print(repr(line))
 
 
 
