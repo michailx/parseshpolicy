@@ -1,10 +1,21 @@
 from datetime import datetime
-from sys import exit
 import re
+import sys
 
+input_file_name = 'PM.txt'
+if len(sys.argv) == 2:
+    input_file_name = sys.argv[1]
+else:
+    print('\nI expected one (and only) command line argument; the filename. Since you did not provide one, '
+          'I will search for file '+input_file_name+' instead. \n')
 # Read input file
 
-fr = open('./input_file/PM.txt', 'r')
+try:
+    fr = open('./input_file/'+input_file_name, 'r')
+except FileNotFoundError:
+    print('File'+'./input_file/'+input_file_name+' does not exist!')
+    exit(1)
+
 input_string = fr.read()
 fr.close()
 
@@ -27,15 +38,15 @@ for line in lines:
         # Timestamp
         line = line[:8]
 
-        table_row = []
-        table_row.append(line)
-
         # Save previous sample
         if i == 1:
             table.append(table_head)
             table.append(table_row)
         elif i > 1:
             table.append(table_row)
+
+        table_row = []
+        table_row.append(line)
 
         # Next sample
         i += 1
@@ -57,15 +68,17 @@ for line in lines:
         # Disregard
         continue
     #print(repr(line))
-
+else:
+    # Save last sample
+    table.append(table_row)
 
 # Create CSV file
 
-file_name = datetime.now().strftime('%Y-%m-%d_%H.%M.%S')
-fw = open('./output_file/'+file_name+'.csv', 'w')
+output_file_name = datetime.now().strftime('%Y-%m-%d_%H.%M.%S')
+fw = open('./output_file/'+output_file_name+'-'+input_file_name+'.csv', 'w')
 for row in table:
     csv = ','.join(row)+'\n'
     fw.write(csv)
-    print csv
+    print(csv)
     csv = ''
 fw.close()
