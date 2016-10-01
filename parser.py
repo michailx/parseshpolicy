@@ -6,8 +6,8 @@ input_file_name = 'PM.txt'
 if len(sys.argv) == 2:
     input_file_name = sys.argv[1]
 else:
-    print('\nI expected one (and only) command line argument; the filename. Since you did not provide one, '
-          'I will search for file '+input_file_name+' instead. \n')
+    print('\nI expected one (and only) command line argument; the filename. Since you did not provide one, I will search for file '+input_file_name+' instead. \n')
+
 # Read input file
 
 try:
@@ -34,7 +34,8 @@ for line in lines:
     if line == "":
         # Empty line
         continue
-    elif re.match('^..:..:..\.', line) is not None:
+    elif re.search('..:..:..\.', line) is not None:  # elif re.match('^..:..:..\.', line) is not None:
+        line = re.search('..:..:..\.', line).group(0)
         # Timestamp
         line = line[:8]
 
